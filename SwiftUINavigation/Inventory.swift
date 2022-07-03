@@ -110,16 +110,37 @@ struct InventoryView: View {
         .foregroundColor(item.status.isInStock ? nil : Color.gray)
       }
     }
-    .alert(item: self.$viewModel.itemToDelete, content: { item in
-      Alert(
-        title: Text(item.name),
-        message: Text("Are you sure you want to delete this item?"),
-        primaryButton: .destructive(Text("Delete")) {
+    .alert(
+      Text(self.viewModel.itemToDelete?.name ?? ""),
+      isPresented: .init(
+        get: { self.viewModel.itemToDelete != nil },
+        set: { isPresented in
+          if !isPresented {
+            self.viewModel.itemToDelete = nil
+          }
+        }
+      ), // .constant(true),
+      presenting: self.viewModel.itemToDelete, // Int?.none,
+      actions: { item in
+        Button("Delete", role: .destructive) {
+          /* do something */
           self.viewModel.delete(item: item)
-        },
-        secondaryButton: .cancel()
-      )
-    })
+        }
+      },
+      message: { _ in
+        Text("Are you sure you want to delete this item?")
+      }
+    )
+//    .alert(item: self.$viewModel.itemToDelete, content: { item in
+//      Alert(
+//        title: Text(item.name),
+//        message: Text("Are you sure you want to delete this item?"),
+//        primaryButton: .destructive(Text("Delete")) {
+//          self.viewModel.delete(item: item)
+//        },
+//        secondaryButton: .cancel()
+//      )
+//    })
   }
 }
 

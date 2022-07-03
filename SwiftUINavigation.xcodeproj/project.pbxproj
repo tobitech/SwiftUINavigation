@@ -19,6 +19,7 @@
 		20FF379E2871D1F00072A803 /* SwiftUIHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FF379D2871D1F00072A803 /* SwiftUIHelpers.swift */; };
 		20FF37A02871EAD70072A803 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FF379F2871EAD70072A803 /* ItemView.swift */; };
 		20FF37A3287201BE0072A803 /* CasePaths in Frameworks */ = {isa = PBXBuildFile; productRef = 20FF37A2287201BE0072A803 /* CasePaths */; };
+		20FF37A528723E960072A803 /* ItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FF37A428723E960072A803 /* ItemRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		20FF37982871B79A0072A803 /* Inventory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inventory.swift; sourceTree = "<group>"; };
 		20FF379D2871D1F00072A803 /* SwiftUIHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIHelpers.swift; sourceTree = "<group>"; };
 		20FF379F2871EAD70072A803 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
+		20FF37A428723E960072A803 /* ItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				206B068928710E4800569E59 /* SwiftUINavigationApp.swift */,
 				206B068B28710E4800569E59 /* ContentView.swift */,
 				20FF37982871B79A0072A803 /* Inventory.swift */,
+				20FF37A428723E960072A803 /* ItemRow.swift */,
 				20FF379F2871EAD70072A803 /* ItemView.swift */,
 				20FF379D2871D1F00072A803 /* SwiftUIHelpers.swift */,
 				206B068D28710E4B00569E59 /* Assets.xcassets */,
@@ -281,6 +284,7 @@
 				20FF37992871B79A0072A803 /* Inventory.swift in Sources */,
 				20FF379E2871D1F00072A803 /* SwiftUIHelpers.swift in Sources */,
 				206B068C28710E4800569E59 /* ContentView.swift in Sources */,
+				20FF37A528723E960072A803 /* ItemRow.swift in Sources */,
 				20FF37A02871EAD70072A803 /* ItemView.swift in Sources */,
 				206B068A28710E4800569E59 /* SwiftUINavigationApp.swift in Sources */,
 			);

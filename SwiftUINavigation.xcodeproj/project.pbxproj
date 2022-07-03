@@ -16,6 +16,7 @@
 		206B06A728710E4C00569E59 /* SwiftUINavigationUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B06A628710E4C00569E59 /* SwiftUINavigationUITestsLaunchTests.swift */; };
 		20FF37992871B79A0072A803 /* Inventory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FF37982871B79A0072A803 /* Inventory.swift */; };
 		20FF379C2871C6590072A803 /* IdentifiedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 20FF379B2871C6590072A803 /* IdentifiedCollections */; };
+		20FF379E2871D1F00072A803 /* SwiftUIHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FF379D2871D1F00072A803 /* SwiftUIHelpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		206B06A428710E4C00569E59 /* SwiftUINavigationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUINavigationUITests.swift; sourceTree = "<group>"; };
 		206B06A628710E4C00569E59 /* SwiftUINavigationUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUINavigationUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		20FF37982871B79A0072A803 /* Inventory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inventory.swift; sourceTree = "<group>"; };
+		20FF379D2871D1F00072A803 /* SwiftUIHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIHelpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 				206B068928710E4800569E59 /* SwiftUINavigationApp.swift */,
 				206B068B28710E4800569E59 /* ContentView.swift */,
 				20FF37982871B79A0072A803 /* Inventory.swift */,
+				20FF379D2871D1F00072A803 /* SwiftUIHelpers.swift */,
 				206B068D28710E4B00569E59 /* Assets.xcassets */,
 				206B068F28710E4B00569E59 /* Preview Content */,
 			);
@@ -269,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				20FF37992871B79A0072A803 /* Inventory.swift in Sources */,
+				20FF379E2871D1F00072A803 /* SwiftUIHelpers.swift in Sources */,
 				206B068C28710E4800569E59 /* ContentView.swift in Sources */,
 				206B068A28710E4800569E59 /* SwiftUINavigationApp.swift in Sources */,
 			);

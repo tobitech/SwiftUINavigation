@@ -159,15 +159,21 @@ struct InventoryView: View {
     }
     .navigationBarTitle("Inventory")
 //    .sheet(isPresented: self.$addItemIsPresented) {
-    .sheet(item: self.$viewModel.itemToAdd) { itemToAdd in
-      NavigationView {
-        ItemView(
-          // you might think everytime itemToAdd is generated the freshes value is passed but that's not the case.
-          // so this is not recommended if the underlying property holding the value we're passing is @State.
-          item: itemToAdd,
-          onSave: { self.viewModel.add(item: $0) },
-          onCancel: { self.viewModel.cancelButtonTapped() }
-        )
+    .sheet(item: self.$viewModel.itemToAdd) { _ in
+      // use failable binding initializer
+      // check if it's able to unwrap the optional
+      if let $itemToAdd = Binding(unwrap: self.$viewModel.itemToAdd) {
+        NavigationView {
+          ItemView(
+            // you might think everytime itemToAdd is generated the freshes value is passed but that's not the case.
+            // so this is not recommended if the underlying property holding the value we're passing is @State.
+            // item: itemToAdd,
+            // we have to use a two way binding instead
+            item: $itemToAdd,
+            onSave: { self.viewModel.add(item: $0) },
+            onCancel: { self.viewModel.cancelButtonTapped() }
+          )
+        }
       }
     }
   }

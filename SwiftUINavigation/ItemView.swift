@@ -10,36 +10,17 @@ import SwiftUI
 
 struct ItemView: View {
   
-  @State var item = Item(
-    name: "",
-    color: nil,
-    status: .inStock(quantity: 1)
-  )
+//  @State var item = Item(
+//    name: "",
+//    color: nil,
+//    status: .inStock(quantity: 1)
+//  )
+  @Binding var item: Item
   
   let onSave: (Item) -> Void
   let onCancel: () -> Void
   
-  init(
-    item: Item = Item(
-      name: "",
-      color: nil,
-      status: .inStock(quantity: 1)
-    ),
-    onSave: @escaping (Item) -> Void,
-    onCancel: @escaping () -> Void
-  ) {
-    // access the underscore private property
-    self._item = .init(wrappedValue: item)
-    // you can't really instantiate item like below when you want to use a default value in the .init method - you get an error.
-    // it's holding a state to item not item itself.
-//    self.item = item
-    self.onSave = onSave
-    self.onCancel = onCancel
-    print("ItemView.init", item.name)
-  }
-  
   var body: some View {
-    let _ = print("ItemView.body", self.item.name)
     Form {
       TextField("Name", text: self.$item.name)
       
@@ -91,11 +72,24 @@ struct ItemView: View {
 }
 
 struct ItemView_Previews: PreviewProvider {
+  
+  struct WrapperView: View {
+    
+    @State var item: Item = Item(name: "", color: nil, status: .inStock(quantity: 1))
+    
+    var body: some View {
+      ItemView(item: $item, onSave: { _ in }, onCancel: { })
+    }
+  }
+  
   static var previews: some View {
     NavigationView {
-      ItemView(
-        onSave: { _ in },
-        onCancel: { })
+      WrapperView()
+//      ItemView(
+//        item: .constant(Item(name: "", color: nil, status: .inStock(quantity: 1))),
+//        onSave: { _ in },
+//        onCancel: { }
+//      )
     }
   }
 }

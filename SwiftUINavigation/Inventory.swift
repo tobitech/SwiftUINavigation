@@ -47,24 +47,31 @@ struct Item: Equatable, Identifiable {
 
 class InventoryViewModel: ObservableObject {
   @Published var inventory: IdentifiedArrayOf<Item>
+  @Published var itemToDelete: Item?
   
-  init(inventory: IdentifiedArrayOf<Item> = []) {
+  init(
+    inventory: IdentifiedArrayOf<Item> = [],
+    itemToDelete: Item? = nil
+  ) {
     self.inventory = inventory
+    self.itemToDelete = itemToDelete
   }
   
   func delete(item: Item) {
     withAnimation {
-//      self.inventory.removeAll(where: { $0.id == item.id })
-      // this method will remove that item corresponding to that id and then just remove it.
       _ = self.inventory.remove(id: item.id)
     }
+  }
+  
+  func deleteButtonTapped(item: Item) {
+    self.itemToDelete = item
   }
 }
 
 struct InventoryView: View {
   @ObservedObject var viewModel: InventoryViewModel
 //  @State var deletedItemAlertIsPresented = false
-  @State var itemToDelete: Item?
+//  @State var itemToDelete: Item?
   
   var body: some View {
     List {
@@ -92,8 +99,7 @@ struct InventoryView: View {
           
           Button(
             action: {
-//              self.deletedItemAlertIsPresented = true
-              self.itemToDelete = item
+              self.viewModel.deleteButtonTapped(item: item)
             }
           ) {
             Image(systemName: "trash.fill")
@@ -104,7 +110,7 @@ struct InventoryView: View {
         .foregroundColor(item.status.isInStock ? nil : Color.gray)
       }
     }
-    .alert(item: self.$itemToDelete, content: { item in
+    .alert(item: self.$viewModel.itemToDelete, content: { item in
       Alert(
         title: Text(item.name),
         message: Text("Are you sure you want to delete this item?"),
@@ -119,6 +125,9 @@ struct InventoryView: View {
 
 struct InventoryView_Previews: PreviewProvider {
   static var previews: some View {
+    
+    let keyboard = Item(name: "Keyboard", color: .blue, status: .inStock(quantity: 100))
+    
     InventoryView(
       viewModel: .init(
         inventory: [
@@ -126,7 +135,8 @@ struct InventoryView_Previews: PreviewProvider {
           Item(name: "Charger", color: .yellow, status: .inStock(quantity: 20)),
           Item(name: "Phone", color: .green, status: .outOfStock(isOnBackOrder: true)),
           Item(name: "Headphones", color: .green, status: .outOfStock(isOnBackOrder: false)),
-        ]
+        ],
+        itemToDelete: keyboard
       )
     )
   }

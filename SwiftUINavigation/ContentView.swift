@@ -17,8 +17,8 @@ class AppViewModel: ObservableObject {
   @Published var selectedTab: Tab
   
   init(
-    selectedTab: Tab = .one,
-    inventoryViewModel: InventoryViewModel = .init()
+    inventoryViewModel: InventoryViewModel = .init(),
+    selectedTab: Tab = .one
   ) {
     self.inventoryViewModel = inventoryViewModel
     self.selectedTab = selectedTab

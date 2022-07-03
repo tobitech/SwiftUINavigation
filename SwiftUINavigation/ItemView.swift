@@ -19,7 +19,27 @@ struct ItemView: View {
   let onSave: (Item) -> Void
   let onCancel: () -> Void
   
+  init(
+    item: Item = Item(
+      name: "",
+      color: nil,
+      status: .inStock(quantity: 1)
+    ),
+    onSave: @escaping (Item) -> Void,
+    onCancel: @escaping () -> Void
+  ) {
+    // access the underscore private property
+    self._item = .init(wrappedValue: item)
+    // you can't really instantiate item like below when you want to use a default value in the .init method - you get an error.
+    // it's holding a state to item not item itself.
+//    self.item = item
+    self.onSave = onSave
+    self.onCancel = onCancel
+    print("ItemView.init", item.name)
+  }
+  
   var body: some View {
+    let _ = print("ItemView.body", self.item.name)
     Form {
       TextField("Name", text: self.$item.name)
       

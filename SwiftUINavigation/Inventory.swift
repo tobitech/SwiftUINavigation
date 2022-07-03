@@ -63,6 +63,7 @@ class InventoryViewModel: ObservableObject {
   func add(item: Item) {
     withAnimation {
       _ = self.inventory.append(item)
+      self.itemToAdd = nil
     }
   }
   
@@ -78,7 +79,15 @@ class InventoryViewModel: ObservableObject {
       color: nil,
       status: .inStock(quantity: 1)
     )
-    self.itemToAdd = nil
+    
+    // Let's simulate that we're doing some Machine Learning operations that we can use to predict what the user is going to fill in the form.
+    // we will fire off a task
+    // whenever you're running a Task like this, you don't know what thread it's running on, so you need to make sure to only update the @Published field of a view model in the main thread. or main actor.
+    Task { @MainActor in
+      try await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
+      // assuming after 500 millisec, the AI told returns a predicted name to be added.
+      self.itemToAdd?.name = "Bluetooth keyboard"
+    }
   }
   
   func cancelButtonTapped() {
@@ -153,6 +162,9 @@ struct InventoryView: View {
     .sheet(item: self.$viewModel.itemToAdd) { itemToAdd in
       NavigationView {
         ItemView(
+          // you might think everytime itemToAdd is generated the freshes value is passed but that's not the case.
+          // so this is not recommended if the underlying property holding the value we're passing is @State.
+          item: itemToAdd,
           onSave: { self.viewModel.add(item: $0) },
           onCancel: { self.viewModel.cancelButtonTapped() }
         )
@@ -173,7 +185,7 @@ struct InventoryView_Previews: PreviewProvider {
             Item(name: "Phone", color: .green, status: .outOfStock(isOnBackOrder: true)),
             Item(name: "Headphones", color: .green, status: .outOfStock(isOnBackOrder: false)),
           ],
-          itemToAdd: .init(name: "", color: nil, status: .inStock(quantity: 1)),
+//          itemToAdd: .init(name: "Mouse", color: nil, status: .inStock(quantity: 1)),
           itemToDelete: nil
         )
       )

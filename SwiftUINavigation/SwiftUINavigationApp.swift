@@ -22,7 +22,7 @@ struct SwiftUINavigationApp: App {
               Item(name: "Phone", color: .green, status: .outOfStock(isOnBackOrder: true)),
               Item(name: "Headphones", color: .green, status: .outOfStock(isOnBackOrder: false)),
             ],
-            itemToAdd: .init(name: "", color: nil, status: .inStock(quantity: 1)),
+            itemToAdd: nil, // .init(name: "", color: nil, status: .inStock(quantity: 1)),
             itemToDelete: nil
           ),
           selectedTab: .inventory

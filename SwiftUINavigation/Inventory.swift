@@ -110,8 +110,10 @@ struct InventoryView: View {
         .foregroundColor(item.status.isInStock ? nil : Color.gray)
       }
     }
+//    .confirmationDialog(
     .alert(
       title: { Text($0.name) },
+//      titleVisibility: .visible,
       presenting: self.$viewModel.itemToDelete,
       actions: { item in
         Button("Delete", role: .destructive) {

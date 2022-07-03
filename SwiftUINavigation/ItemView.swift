@@ -9,16 +9,7 @@ import CasePaths
 import SwiftUI
 
 struct ItemView: View {
-  
-//  @State var item = Item(
-//    name: "",
-//    color: nil,
-//    status: .inStock(quantity: 1)
-//  )
   @Binding var item: Item
-  
-  let onSave: (Item) -> Void
-  let onCancel: () -> Void
   
   var body: some View {
     Form {
@@ -54,20 +45,6 @@ struct ItemView: View {
       }
       
     }
-    .navigationTitle("Add new item")
-    .navigationBarTitleDisplayMode(.inline)
-    .toolbar {
-      ToolbarItem(placement: .cancellationAction) {
-        Button("Cancel") {
-          self.onCancel()
-        }
-      }
-      ToolbarItem(placement: .primaryAction) {
-        Button("Save") {
-          self.onSave(self.item)
-        }
-      }
-    }
   }
 }
 
@@ -78,7 +55,7 @@ struct ItemView_Previews: PreviewProvider {
     @State var item: Item = Item(name: "", color: nil, status: .inStock(quantity: 1))
     
     var body: some View {
-      ItemView(item: $item, onSave: { _ in }, onCancel: { })
+      ItemView(item: $item)
     }
   }
   

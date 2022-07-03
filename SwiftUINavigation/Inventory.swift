@@ -160,11 +160,20 @@ struct InventoryView: View {
     .navigationBarTitle("Inventory")
     .sheet(unwrap: self.$viewModel.itemToAdd) { $itemToAdd in
       NavigationView {
-        ItemView(
-          item: $itemToAdd,
-          onSave: { self.viewModel.add(item: $0) },
-          onCancel: { self.viewModel.cancelButtonTapped() }
-        )
+        ItemView(item: $itemToAdd)
+          .navigationTitle("Add")
+          .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+              Button("Cancel") {
+                self.viewModel.cancelButtonTapped()
+              }
+            }
+            ToolbarItem(placement: .primaryAction) {
+              Button("Save") {
+                self.viewModel.add(item: itemToAdd)
+              }
+            }
+          }
       }
     }
   }

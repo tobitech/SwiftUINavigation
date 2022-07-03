@@ -51,9 +51,10 @@ class InventoryViewModel: ObservableObject {
     self.inventory = inventory
   }
   
-  func delete(item: Item) {
+  func delete(at index: Int) {
     withAnimation {
-      self.inventory.removeAll(where: { $0.id == item.id })
+//      self.inventory.removeAll(where: { $0.id == item.id })
+      self.inventory.remove(at: index)
     }
   }
 }
@@ -65,7 +66,7 @@ struct InventoryView: View {
   
   var body: some View {
     List {
-      ForEach(self.viewModel.inventory) { item in
+      ForEach(Array(zip(self.viewModel.inventory.indices, self.viewModel.inventory)), id: \.1.id) { index, item in
         HStack {
           VStack(alignment: .leading) {
             Text(item.name)
@@ -88,10 +89,7 @@ struct InventoryView: View {
           }
           
           Button(
-            action: {
-//              self.deletedItemAlertIsPresented = true
-              self.itemToDelete = item
-            }
+            action: { self.itemToDelete = (index, item) }
           ) {
             Image(systemName: "trash.fill")
           }
@@ -101,12 +99,12 @@ struct InventoryView: View {
         .foregroundColor(item.status.isInStock ? nil : Color.gray)
       }
     }
-    .alert(item: self.$itemToDelete, content: { item in
+    .alert(item: self.$itemToDelete, content: { index, item in
       Alert(
         title: Text(item.name),
         message: Text("Are you sure you want to delete this item?"),
         primaryButton: .destructive(Text("Delete")) {
-          self.viewModel.delete(item: item)
+          self.viewModel.delete(at: index)
         },
         secondaryButton: .cancel()
       )

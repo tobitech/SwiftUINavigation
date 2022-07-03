@@ -16,6 +16,9 @@ struct ItemView: View {
     status: .inStock(quantity: 1)
   )
   
+  let onSave: (Item) -> Void
+  let onCancel: () -> Void
+  
   var body: some View {
     Form {
       TextField("Name", text: self.$item.name)
@@ -51,13 +54,28 @@ struct ItemView: View {
       
     }
     .navigationTitle("Add new item")
+    .navigationBarTitleDisplayMode(.inline)
+    .toolbar {
+      ToolbarItem(placement: .cancellationAction) {
+        Button("Cancel") {
+          self.onCancel()
+        }
+      }
+      ToolbarItem(placement: .primaryAction) {
+        Button("Save") {
+          self.onSave(self.item)
+        }
+      }
+    }
   }
 }
 
 struct ItemView_Previews: PreviewProvider {
   static var previews: some View {
     NavigationView {
-      ItemView()
+      ItemView(
+        onSave: { _ in },
+        onCancel: { })
     }
   }
 }

@@ -57,6 +57,12 @@ class InventoryViewModel: ObservableObject {
     self.itemToDelete = itemToDelete
   }
   
+  func add(item: Item) {
+    withAnimation {
+      _ = self.inventory.append(item)
+    }
+  }
+  
   func delete(item: Item) {
     withAnimation {
       _ = self.inventory.remove(id: item.id)
@@ -131,7 +137,13 @@ struct InventoryView: View {
     .navigationBarTitle("Inventory")
     .sheet(isPresented: self.$addItemIsPresented) {
       NavigationView {
-        ItemView()
+        ItemView(
+          onSave: {
+            self.viewModel.add(item: $0)
+            self.addItemIsPresented = false
+          },
+          onCancel: { self.addItemIsPresented = false }
+        )
       }
     }
   }

@@ -60,7 +60,7 @@ class InventoryViewModel: ObservableObject {
 
 struct InventoryView: View {
   @ObservedObject var viewModel: InventoryViewModel
-  @State var deletedItemAlertIsPresented = false
+//  @State var deletedItemAlertIsPresented = false
   @State var itemToDelete: Item?
   
   var body: some View {
@@ -89,7 +89,7 @@ struct InventoryView: View {
           
           Button(
             action: {
-              self.deletedItemAlertIsPresented = true
+//              self.deletedItemAlertIsPresented = true
               self.itemToDelete = item
             }
           ) {
@@ -101,19 +101,16 @@ struct InventoryView: View {
         .foregroundColor(item.status.isInStock ? nil : Color.gray)
       }
     }
-    .alert(isPresented: self.$deletedItemAlertIsPresented) {
+    .alert(item: self.$itemToDelete, content: { item in
       Alert(
-        title: Text(self.itemToDelete?.name ?? "Delete"),
+        title: Text(item.name),
         message: Text("Are you sure you want to delete this item?"),
         primaryButton: .destructive(Text("Delete")) {
-          // TODO: Handle deletion
-          if let itemToDelete = itemToDelete {
-            self.viewModel.delete(item: itemToDelete)
-          }
+          self.viewModel.delete(item: item)
         },
         secondaryButton: .cancel()
       )
-    }
+    })
   }
 }
 

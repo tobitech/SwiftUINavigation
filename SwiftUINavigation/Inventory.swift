@@ -1,3 +1,4 @@
+import IdentifiedCollections
 import SwiftUI
 
 struct Item: Equatable, Identifiable {
@@ -45,16 +46,17 @@ struct Item: Equatable, Identifiable {
 }
 
 class InventoryViewModel: ObservableObject {
-  @Published var inventory: [Item]
+  @Published var inventory: IdentifiedArrayOf<Item>
   
-  init(inventory: [Item] = []) {
+  init(inventory: IdentifiedArrayOf<Item> = []) {
     self.inventory = inventory
   }
   
-  func delete(at index: Int) {
+  func delete(item: Item) {
     withAnimation {
 //      self.inventory.removeAll(where: { $0.id == item.id })
-      self.inventory.remove(at: index)
+      // this method will remove that item corresponding to that id and then just remove it.
+      _ = self.inventory.remove(id: item.id)
     }
   }
 }
@@ -66,7 +68,7 @@ struct InventoryView: View {
   
   var body: some View {
     List {
-      ForEach(Array(zip(self.viewModel.inventory.indices, self.viewModel.inventory)), id: \.1.id) { index, item in
+      ForEach(self.viewModel.inventory) { item in
         HStack {
           VStack(alignment: .leading) {
             Text(item.name)
@@ -89,7 +91,10 @@ struct InventoryView: View {
           }
           
           Button(
-            action: { self.itemToDelete = (index, item) }
+            action: {
+//              self.deletedItemAlertIsPresented = true
+              self.itemToDelete = item
+            }
           ) {
             Image(systemName: "trash.fill")
           }
@@ -99,12 +104,12 @@ struct InventoryView: View {
         .foregroundColor(item.status.isInStock ? nil : Color.gray)
       }
     }
-    .alert(item: self.$itemToDelete, content: { index, item in
+    .alert(item: self.$itemToDelete, content: { item in
       Alert(
         title: Text(item.name),
         message: Text("Are you sure you want to delete this item?"),
         primaryButton: .destructive(Text("Delete")) {
-          self.viewModel.delete(at: index)
+          self.viewModel.delete(item: item)
         },
         secondaryButton: .cancel()
       )

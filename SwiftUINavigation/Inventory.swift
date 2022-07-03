@@ -70,8 +70,7 @@ class InventoryViewModel: ObservableObject {
 
 struct InventoryView: View {
   @ObservedObject var viewModel: InventoryViewModel
-//  @State var deletedItemAlertIsPresented = false
-//  @State var itemToDelete: Item?
+  @State var addItemIsPresented = false
   
   var body: some View {
     List {
@@ -110,10 +109,8 @@ struct InventoryView: View {
         .foregroundColor(item.status.isInStock ? nil : Color.gray)
       }
     }
-//    .confirmationDialog(
     .alert(
       title: { Text($0.name) },
-//      titleVisibility: .visible,
       presenting: self.$viewModel.itemToDelete,
       actions: { item in
         Button("Delete", role: .destructive) {
@@ -124,24 +121,37 @@ struct InventoryView: View {
         Text("Are you sure you want to delete this item?")
       }
     )
+    .toolbar {
+      ToolbarItem(placement: .primaryAction) {
+        Button("Add") {
+          self.addItemIsPresented = true
+        }
+      }
+    }
+    .navigationBarTitle("Inventory")
+    .sheet(isPresented: self.$addItemIsPresented) {
+      NavigationView {
+        ItemView()
+      }
+    }
   }
 }
 
 struct InventoryView_Previews: PreviewProvider {
   static var previews: some View {
     
-    let keyboard = Item(name: "Keyboard", color: .blue, status: .inStock(quantity: 100))
-    
-    InventoryView(
-      viewModel: .init(
-        inventory: [
-          Item(name: "Keyboard", color: .blue, status: .inStock(quantity: 100)),
-          Item(name: "Charger", color: .yellow, status: .inStock(quantity: 20)),
-          Item(name: "Phone", color: .green, status: .outOfStock(isOnBackOrder: true)),
-          Item(name: "Headphones", color: .green, status: .outOfStock(isOnBackOrder: false)),
-        ],
-        itemToDelete: keyboard
+    NavigationView {
+      InventoryView(
+        viewModel: .init(
+          inventory: [
+            Item(name: "Keyboard", color: .blue, status: .inStock(quantity: 100)),
+            Item(name: "Charger", color: .yellow, status: .inStock(quantity: 20)),
+            Item(name: "Phone", color: .green, status: .outOfStock(isOnBackOrder: true)),
+            Item(name: "Headphones", color: .green, status: .outOfStock(isOnBackOrder: false)),
+          ],
+          itemToDelete: nil
+        )
       )
-    )
+    }
   }
 }

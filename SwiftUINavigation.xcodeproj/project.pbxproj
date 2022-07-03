@@ -14,6 +14,7 @@
 		206B069B28710E4C00569E59 /* SwiftUINavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B069A28710E4C00569E59 /* SwiftUINavigationTests.swift */; };
 		206B06A528710E4C00569E59 /* SwiftUINavigationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B06A428710E4C00569E59 /* SwiftUINavigationUITests.swift */; };
 		206B06A728710E4C00569E59 /* SwiftUINavigationUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B06A628710E4C00569E59 /* SwiftUINavigationUITestsLaunchTests.swift */; };
+		20FF37992871B79A0072A803 /* Inventory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FF37982871B79A0072A803 /* Inventory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		206B06A028710E4C00569E59 /* SwiftUINavigationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUINavigationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		206B06A428710E4C00569E59 /* SwiftUINavigationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUINavigationUITests.swift; sourceTree = "<group>"; };
 		206B06A628710E4C00569E59 /* SwiftUINavigationUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUINavigationUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		20FF37982871B79A0072A803 /* Inventory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inventory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 			children = (
 				206B068928710E4800569E59 /* SwiftUINavigationApp.swift */,
 				206B068B28710E4800569E59 /* ContentView.swift */,
+				20FF37982871B79A0072A803 /* Inventory.swift */,
 				206B068D28710E4B00569E59 /* Assets.xcassets */,
 				206B068F28710E4B00569E59 /* Preview Content */,
 			);
@@ -257,6 +260,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20FF37992871B79A0072A803 /* Inventory.swift in Sources */,
 				206B068C28710E4800569E59 /* ContentView.swift in Sources */,
 				206B068A28710E4800569E59 /* SwiftUINavigationApp.swift in Sources */,
 			);

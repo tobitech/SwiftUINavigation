@@ -9,13 +9,18 @@ import SwiftUI
 
 // Selection can be represented with any type that supports Hashable.
 enum Tab {
-  case one, two, three
+  case one, inventory, three
 }
 
 class AppViewModel: ObservableObject {
+  @Published var inventoryViewModel: InventoryViewModel
   @Published var selectedTab: Tab
   
-  init(selectedTab: Tab = .one) {
+  init(
+    selectedTab: Tab = .one,
+    inventoryViewModel: InventoryViewModel = .init()
+  ) {
+    self.inventoryViewModel = inventoryViewModel
     self.selectedTab = selectedTab
   }
 }
@@ -27,14 +32,14 @@ struct ContentView: View {
   var body: some View {
     TabView(selection: self.$viewModel.selectedTab) {
       Button("Go to Tab 2") {
-        self.viewModel.selectedTab = .two
+        self.viewModel.selectedTab = .inventory
       }
         .tabItem { Text("One") }
         .tag(Tab.one)
       
-      Text("Two")
+      InventoryView(viewModel: self.viewModel.inventoryViewModel)
         .tabItem { Text("Two") }
-        .tag(Tab.two)
+        .tag(Tab.inventory)
       
       Text("Three")
         .tabItem { Text("Three") }
@@ -45,6 +50,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
-    ContentView(viewModel: .init(selectedTab: .two))
+    ContentView(viewModel: .init(selectedTab: .inventory))
   }
 }

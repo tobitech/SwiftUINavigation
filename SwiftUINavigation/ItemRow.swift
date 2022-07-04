@@ -102,19 +102,7 @@ struct ItemRowView: View {
         Text("Are you sure you want to delete this item?")
       }
     )
-    .sheet(
-      unwrap: Binding(
-        get: {
-          guard case let .some(.edit(item)) = self.viewModel.route else { return nil }
-          return item
-        },
-        set: { item in
-          if let item = item {
-            self.viewModel.route = .edit(item)
-          }
-        }
-      )
-    ) { $item in
+    .sheet(unwrap: self.$viewModel.route.case(/ItemRowViewModel.Route.edit)) { $item in
       NavigationView {
         ItemView(item: $item)
           .navigationTitle("Edit")

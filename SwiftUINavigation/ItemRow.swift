@@ -14,6 +14,7 @@ class ItemRowViewModel: Identifiable, ObservableObject {
   // this is optional because there is a situtation that we don't need to present
   // any of the routes.
   @Published var route: Route?
+  @Published var isSaving = true
   
   enum Route: Equatable {
     case deleteAlert
@@ -56,8 +57,14 @@ class ItemRowViewModel: Identifiable, ObservableObject {
   }
   
   func edit(item: Item) {
-    self.item = item
-    self.route = nil
+    self.isSaving = true
+    Task { @MainActor in
+      try await Task.sleep(nanoseconds: NSEC_PER_SEC)
+      
+      self.isSaving = false
+      self.item = item
+      self.route = nil
+    }
   }
   
   func duplicate(item: Item) {
@@ -181,9 +188,15 @@ struct ItemRowView: View {
               }
               
               ToolbarItem(placement: .primaryAction) {
-                Button("Add") {
-                  self.viewModel.duplicate(item: item)
+                HStack {
+                  if self.viewModel.isSaving {
+                    ProgressView()
+                  }
+                  Button("Save") {
+                    self.viewModel.duplicate(item: item)
+                  }
                 }
+                .disabled(self.viewModel.isSaving)
               }
             }
         }

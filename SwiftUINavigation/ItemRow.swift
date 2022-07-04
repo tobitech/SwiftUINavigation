@@ -37,6 +37,19 @@ class ItemRowViewModel: Identifiable, ObservableObject {
   func deleteConfirmationButtonTapped() {
     self.onDelete()
   }
+  
+  func editButtonTapped() {
+    self.route = .edit(self.item)
+  }
+  
+  func cancelButtonTapped() {
+    self.route = nil
+  }
+  
+  func edit(item: Item) {
+    self.item = item
+    self.route = nil
+  }
 }
 
 struct ItemRowView: View {
@@ -65,6 +78,11 @@ struct ItemRowView: View {
           .border(Color.black, width: 1)
       }
       
+      Button(action: { self.viewModel.editButtonTapped() }) {
+        Image(systemName: "pencil")
+      }
+      .padding(.leading)
+      
       Button(action: { self.viewModel.deleteButtonTapped() }) {
         Image(systemName: "trash.fill")
       }
@@ -84,6 +102,37 @@ struct ItemRowView: View {
         Text("Are you sure you want to delete this item?")
       }
     )
+    .sheet(
+      unwrap: Binding(
+        get: {
+          guard case let .some(.edit(item)) = self.viewModel.route else { return nil }
+          return item
+        },
+        set: { item in
+          if let item = item {
+            self.viewModel.route = .edit(item)
+          }
+        }
+      )
+    ) { $item in
+      NavigationView {
+        ItemView(item: $item)
+          .navigationTitle("Edit")
+          .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+              Button("Cancel") {
+                self.viewModel.cancelButtonTapped()
+              }
+            }
+            
+            ToolbarItem(placement: .primaryAction) {
+              Button("Save") {
+                self.viewModel.edit(item: item)
+              }
+            }
+          }
+      }
+    }
   }
 }
 

@@ -78,36 +78,25 @@ struct ItemRowView: View {
   
   var body: some View {
     NavigationLink(
-      isActive: Binding(
-        get: {
-          guard case .edit = self.viewModel.route else {
-            return false
-          }
-          return true
-        },
-        set: self.viewModel.setEditNavigation(isActive:)
-      ),
-      destination: {
-        // we're using this custom Binding initializer we made so that we can get a honest value from the route case.
-        // instead of an optional binding.
-        if let $item = Binding(unwrap: self.$viewModel.route.case(/ItemRowViewModel.Route.edit)) {
-          ItemView(item: $item)
-            .navigationBarTitle("Edit")
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-              ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
-                  self.viewModel.cancelButtonTapped()
-                }
-              }
-  
-              ToolbarItem(placement: .primaryAction) {
-                Button("Save") {
-                  self.viewModel.edit(item: $item.wrappedValue)
-                }
+      unwrap: self.$viewModel.route.case(/ItemRowViewModel.Route.edit),
+      onNavigate: self.viewModel.setEditNavigation(isActive:),
+      destination: { $item in
+        ItemView(item: $item)
+          .navigationBarTitle("Edit")
+          .navigationBarBackButtonHidden(true)
+          .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+              Button("Cancel") {
+                self.viewModel.cancelButtonTapped()
               }
             }
-        }
+
+            ToolbarItem(placement: .primaryAction) {
+              Button("Save") {
+                self.viewModel.edit(item: $item.wrappedValue)
+              }
+            }
+          }
       }
     ) {
       

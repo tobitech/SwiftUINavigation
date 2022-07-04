@@ -161,3 +161,32 @@ extension View {
     }
   }
 }
+
+extension NavigationLink {
+  init<Value, WrappedDestination>(
+    unwrap optionalValue: Binding<Value?>,
+    // we are using this to tap into the point where a row is tapped on the app.
+    onNavigate: @escaping (Bool) -> Void,
+    @ViewBuilder destination: @escaping (Binding<Value>) -> WrappedDestination,
+    @ViewBuilder label: @escaping () -> Label
+  ) where Destination == WrappedDestination? {
+    self.init(
+      isActive: Binding(
+        get: { optionalValue.wrappedValue != nil },
+        set: { isActive in
+          if !isActive {
+            optionalValue.wrappedValue = nil
+          }
+          onNavigate(isActive)
+        }
+      ),
+      destination: {
+        // what we're doing here is checking if we can get a binding of a honest value from a binding of an optional value.
+        if let value = Binding(unwrap: optionalValue) {
+          destination(value)
+        }
+      },
+      label: label
+    )
+  }
+}

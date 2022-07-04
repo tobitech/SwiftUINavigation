@@ -39,8 +39,12 @@ class ItemRowViewModel: Identifiable, ObservableObject {
     self.onDelete()
   }
   
-  func editButtonTapped() {
-    self.route = .edit(self.item)
+//  func editButtonTapped() {
+//    self.route = .edit(self.item)
+//  }
+  
+  func setEditNavigation(isActive: Bool) {
+    self.route = isActive ? .edit(self.item) : nil
   }
   
   func cancelButtonTapped() {
@@ -74,7 +78,22 @@ struct ItemRowView: View {
   
   var body: some View {
     NavigationLink(
-      destination: { ItemView(item: self.$viewModel.item) }
+      isActive: Binding(
+        get: {
+          guard case .edit = self.viewModel.route else {
+            return false
+          }
+          return true
+        },
+        set: self.viewModel.setEditNavigation(isActive:)
+      ),
+      destination: {
+        // we're using this custom Binding initializer we made so that we can get a honest value from the route case.
+        // instead of an optional binding.
+        if let $item = Binding(unwrap: self.$viewModel.route.case(/ItemRowViewModel.Route.edit)) {
+          ItemView(item: $item)
+        }
+      }
     ) {
       
       HStack {

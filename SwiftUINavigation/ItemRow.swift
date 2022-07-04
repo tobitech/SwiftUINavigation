@@ -12,6 +12,8 @@ class ItemRowViewModel: Identifiable, ObservableObject {
   // we can use a simpler API to display alert.
   @Published var deleteItemAlertIsPresented: Bool
   @Published var item: Item
+  @Published var itemToDuplicate: Item?
+  @Published var itemToEdit: Item?
   
   var onDelete: () -> Void = {}
   

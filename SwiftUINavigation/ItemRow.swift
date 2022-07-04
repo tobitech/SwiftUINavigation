@@ -92,6 +92,21 @@ struct ItemRowView: View {
         // instead of an optional binding.
         if let $item = Binding(unwrap: self.$viewModel.route.case(/ItemRowViewModel.Route.edit)) {
           ItemView(item: $item)
+            .navigationBarTitle("Edit")
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+              ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel") {
+                  self.viewModel.cancelButtonTapped()
+                }
+              }
+  
+              ToolbarItem(placement: .primaryAction) {
+                Button("Save") {
+                  self.viewModel.edit(item: $item.wrappedValue)
+                }
+              }
+            }
         }
       }
     ) {

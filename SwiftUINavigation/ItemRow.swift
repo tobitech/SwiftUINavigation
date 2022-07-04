@@ -145,7 +145,7 @@ struct ItemRowView: View {
     .popover(unwrap: self.$viewModel.route.case(/ItemRowViewModel.Route.duplicate)) { $item in
       NavigationView {
         ItemView(item: $item)
-          .navigationTitle("Edit")
+          .navigationTitle("Duplicate")
           .toolbar {
             ToolbarItem(placement: .cancellationAction) {
               Button("Cancel") {

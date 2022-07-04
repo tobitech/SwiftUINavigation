@@ -19,6 +19,28 @@ extension Binding {
       }
     )
   }
+  
+  // check to see if something is present within a case path.
+  func isPresent<Enum, Case>(_ casePath: CasePath<Enum, Case>) -> Binding<Bool> where Value == Enum? {
+    Binding<Bool>(
+      get: {
+        // we are using .some in the pattern matching to denote where the
+        // value is not nil - because viewmodel.route is optional
+//        if case .some(.deleteAlert) = self.viewModel.route {
+        if let wrappedValue = self.wrappedValue,
+            casePath.extract(from: wrappedValue) != nil {
+          return true
+        } else {
+          return false
+        }
+      },
+      set: { isPresented in
+        if !isPresented {
+          self.wrappedValue = nil
+        }
+      }
+    )
+  }
 }
 
 extension View {

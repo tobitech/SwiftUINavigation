@@ -62,9 +62,16 @@ class InventoryViewModel: ObservableObject {
   }
   
   private func bind(itemRowViewModel: ItemRowViewModel) {
+    
     itemRowViewModel.onDelete = { [weak self, item = itemRowViewModel.item] in
       withAnimation {
         _ = self?.delete(item: item)
+      }
+    }
+    
+    itemRowViewModel.onDuplicate = { [weak self] item in
+      withAnimation {
+        _ = self?.add(item: item)
       }
     }
     self.inventory.append(itemRowViewModel)

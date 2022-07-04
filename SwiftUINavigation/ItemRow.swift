@@ -22,6 +22,7 @@ class ItemRowViewModel: Identifiable, ObservableObject {
   }
   
   var onDelete: () -> Void = {}
+  var onDuplicate: (Item) -> Void = { _ in }
   
   var id: Item.ID { self.item.id }
   
@@ -56,7 +57,8 @@ class ItemRowViewModel: Identifiable, ObservableObject {
   }
   
   func duplicate(item: Item) {
-    
+    self.onDuplicate(item)
+    self.route = nil
   }
 }
 

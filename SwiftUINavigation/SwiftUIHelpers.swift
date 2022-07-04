@@ -171,15 +171,7 @@ extension NavigationLink {
     @ViewBuilder label: @escaping () -> Label
   ) where Destination == WrappedDestination? {
     self.init(
-      isActive: Binding(
-        get: { optionalValue.wrappedValue != nil },
-        set: { isActive in
-          if !isActive {
-            optionalValue.wrappedValue = nil
-          }
-          onNavigate(isActive)
-        }
-      ),
+      isActive: optionalValue.isPresent().didSet(onNavigate),
       destination: {
         // what we're doing here is checking if we can get a binding of a honest value from a binding of an optional value.
         if let value = Binding(unwrap: optionalValue) {
@@ -187,6 +179,18 @@ extension NavigationLink {
         }
       },
       label: label
+    )
+  }
+}
+
+extension Binding {
+  func didSet(_ callback: @escaping (Value) -> Void) -> Self {
+    Binding(
+      get: { self.wrappedValue },
+      set: {
+        self.wrappedValue = $0
+        callback($0)
+      }
     )
   }
 }

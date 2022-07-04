@@ -15,7 +15,7 @@ class ItemRowViewModel: Identifiable, ObservableObject {
   // any of the routes.
   @Published var route: Route?
   
-  enum Route {
+  enum Route: Equatable {
     case deleteAlert
     case duplicate(Item)
     case edit(Item)

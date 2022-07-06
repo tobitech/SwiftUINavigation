@@ -1,3 +1,4 @@
+import CasePaths
 import IdentifiedCollections
 import SwiftUI
 
@@ -47,20 +48,27 @@ struct Item: Equatable, Identifiable {
 
 class InventoryViewModel: ObservableObject {
   @Published var inventory: IdentifiedArrayOf<ItemRowViewModel>
-  @Published var itemToAdd: Item?
+  @Published var route: Route?
+  
+  enum Route: Equatable {
+    case add(Item)
+    case row(id: ItemRowViewModel.ID, route: ItemRowViewModel.Route)
+  }
   
   init(
     inventory: IdentifiedArrayOf<ItemRowViewModel> = [],
-    itemToAdd: Item? = nil
+    route: Route? = nil
   ) {
-    self.itemToAdd = itemToAdd
     self.inventory = []
+    self.route = route
     
     for itemRowViewModel in inventory {
       self.bind(itemRowViewModel: itemRowViewModel)
     }
   }
   
+  // this is responsible for configuring the child view model
+  // with some work that is done by the parent.
   private func bind(itemRowViewModel: ItemRowViewModel) {
     
     itemRowViewModel.onDelete = { [weak self, item = itemRowViewModel.item] in
@@ -74,13 +82,40 @@ class InventoryViewModel: ObservableObject {
         _ = self?.add(item: item)
       }
     }
+    
+    // this wll make sure that all changes to itemRowViewModel are piped into the inventoryViewModel
+    itemRowViewModel.$route
+      .map { [id = itemRowViewModel.id] route in
+        route.map { Route.row(id: id, route: $0) }
+      }
+      // without this there will be an infinite loop
+      .removeDuplicates()
+      // adding this because the first emission of the row's route is nil
+      // which set the inventory's route to nil as well so the functionality won't work as expected
+      .dropFirst()
+      .assign(to: &self.$route)
+    
+    // next we need to play back changes of the inventory's route to the row's route.
+    // we need to make sure that the ids match before we change the row's route.
+    self.$route
+      .map { [id = itemRowViewModel.id] route in
+        // we want to make sure that the route is of the .row case. cause those are the only route the the row domain understands,
+        // if it's not we should nil out the row's route.
+        guard case let .row(id: routeRowId, route: route) = route, routeRowId == id
+        else { return nil }
+        return route
+      }
+      // without this there will be an infinite loop
+      .removeDuplicates()
+      .assign(to: &itemRowViewModel.$route)
+    
     self.inventory.append(itemRowViewModel)
   }
   
   func add(item: Item) {
     withAnimation {
       self.bind(itemRowViewModel: .init(item: item))
-      self.itemToAdd = nil
+      self.route = nil
     }
   }
   
@@ -91,10 +126,11 @@ class InventoryViewModel: ObservableObject {
   }
   
   func addButtonTapped() {
-    self.itemToAdd = .init(
-      name: "",
-      color: nil,
-      status: .inStock(quantity: 1)
+    self.route = .add(.init(
+        name: "",
+        color: nil,
+        status: .inStock(quantity: 1)
+      )
     )
     
     // Let's simulate that we're doing some Machine Learning operations that we can use to predict what the user is going to fill in the form.
@@ -103,12 +139,14 @@ class InventoryViewModel: ObservableObject {
     Task { @MainActor in
       try await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
       // assuming after 500 millisec, the AI told returns a predicted name to be added.
-      self.itemToAdd?.name = "Bluetooth keyboard"
+      try (/Route.add).modify(&self.route) {
+        $0.name = "Bluetooth keyboard"
+      }
     }
   }
   
   func cancelButtonTapped() {
-    self.itemToAdd = nil
+    self.route = nil
   }
 }
 
@@ -129,7 +167,7 @@ struct InventoryView: View {
       }
     }
     .navigationBarTitle("Inventory")
-    .sheet(unwrap: self.$viewModel.itemToAdd) { $itemToAdd in
+    .sheet(unwrap: self.$viewModel.route.case(/InventoryViewModel.Route.add)) { $itemToAdd in
       NavigationView {
         ItemView(item: $itemToAdd)
           .navigationTitle("Add")
@@ -163,8 +201,8 @@ struct InventoryView_Previews: PreviewProvider {
             .init(item: Item(name: "Charger", color: .yellow, status: .inStock(quantity: 20))),
             .init(item: Item(name: "Phone", color: .green, status: .outOfStock(isOnBackOrder: true))),
             .init(item: Item(name: "Headphones", color: .green, status: .outOfStock(isOnBackOrder: false))),
-          ]
-//          itemToAdd: .init(name: "Mouse", color: nil, status: .inStock(quantity: 1)),
+          ],
+          route: nil // .init(name: "Mouse", color: nil, status: .inStock(quantity: 1)),
         )
       )
     }

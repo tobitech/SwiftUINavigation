@@ -28,7 +28,7 @@ struct SwiftUINavigationApp: App {
               .init(item: Item(name: "Phone", color: .green, status: .outOfStock(isOnBackOrder: true))),
               .init(item: Item(name: "Headphones", color: .green, status: .outOfStock(isOnBackOrder: false))),
             ],
-            itemToAdd: nil // .init(name: "", color: nil, status: .inStock(quantity: 1)),
+            route: .add(editedKeyboard) // .init(name: "", color: nil, status: .inStock(quantity: 1)),
           ),
           selectedTab: .inventory
         )

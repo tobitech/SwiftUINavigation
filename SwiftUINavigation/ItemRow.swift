@@ -27,9 +27,8 @@ class ItemRowViewModel: Identifiable, ObservableObject {
   
   var id: Item.ID { self.item.id }
   
-  init(item: Item, route: Route? = nil) {
+  init(item: Item) {
     self.item = item
-    self.route = route
   }
   
   func deleteButtonTapped() {
@@ -40,9 +39,9 @@ class ItemRowViewModel: Identifiable, ObservableObject {
     self.onDelete()
   }
   
-//  func editButtonTapped() {
-//    self.route = .edit(self.item)
-//  }
+  //  func editButtonTapped() {
+  //    self.route = .edit(self.item)
+  //  }
   
   func setEditNavigation(isActive: Bool) {
     self.route = isActive ? .edit(self.item) : nil

@@ -72,4 +72,40 @@ class SwiftUINavigationTests: XCTestCase {
     XCTAssertEqual(viewModel.inventory[1].item, dupe)
     XCTAssertNil(viewModel.inventory[0].route)
   }
+  
+  func testEdit() async throws {
+    let item = Item(name: "Keyboard", color: .yellow, status: .inStock(quantity: 1))
+    let viewModel = InventoryViewModel(
+      inventory: [
+        .init(item: item)
+      ]
+    )
+    
+    viewModel.inventory[0].setEditNavigation(isActive: true)
+    
+    XCTAssertNotNil(
+      (/ItemRowViewModel.Route.edit).extract(from: try XCTUnwrap(viewModel.inventory[0].route))
+    )
+    
+    var editedItem = item
+    editedItem.color = .blue
+    
+    viewModel.inventory[0].route = .edit(editedItem)
+    
+    viewModel.inventory[0].edit(item: editedItem)
+    
+    XCTAssertEqual(viewModel.inventory[0].isSaving, true)
+    
+    // remember we are simulating the saving of the commits to edits made
+    // that's why we're adding this to sleep.
+    // of course we would use a TestScheduler in ideas scenario to control passage of time because we can't keep waiting for the time to pass.
+    // we added a little more time because the exact time wasn't enough to get the test to pass.
+    try await Task.sleep(nanoseconds: NSEC_PER_SEC + 100 * NSEC_PER_MSEC)
+    
+    XCTAssertNil(viewModel.inventory[0].route)
+    XCTAssertNil(viewModel.route)
+    XCTAssertEqual(viewModel.inventory[0].item, editedItem)
+    
+    XCTAssertEqual(viewModel.inventory[0].isSaving, false)
+  }
 }

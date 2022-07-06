@@ -16,29 +16,32 @@ class SwiftUINavigationTests: XCTestCase {
     
     // XCTAssertNotNil(viewModel.itemToAdd)
     
-    let itemToAdd = try XCTUnwrap(viewModel.itemToAdd)
+    let itemToAdd = try XCTUnwrap((/InventoryViewModel.Route.add).extract(from: try XCTUnwrap(viewModel.route)))
     
     viewModel.add(item: itemToAdd)
     
-    XCTAssertNil(viewModel.itemToAdd)
+    XCTAssertNil(viewModel.route)
     XCTAssertEqual(viewModel.inventory.count, 1)
     XCTAssertEqual(viewModel.inventory[0].item, itemToAdd)
   }
   
   func testDeleteItem() {
+    let keyboard = Item(name: "Keyboard", color: .yellow, status: .inStock(quantity: 1))
     let viewModel = InventoryViewModel(
       inventory: [
-        .init(item: Item(name: "Keyboard", color: .yellow, status: .inStock(quantity: 1)))
+        .init(item: keyboard)
       ]
     )
     
     viewModel.inventory[0].deleteButtonTapped()
     
     XCTAssertEqual(viewModel.inventory[0].route, .deleteAlert)
+    XCTAssertEqual(viewModel.route, .row(id: viewModel.inventory[0].id, route: .deleteAlert))
     
     viewModel.inventory[0].deleteConfirmationButtonTapped()
     
     XCTAssertEqual(viewModel.inventory.count, 0)
+    XCTAssertEqual(viewModel.route, nil)
   }
   
   func testDuplicate() throws {

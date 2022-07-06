@@ -37,6 +37,7 @@ class ItemRowViewModel: Identifiable, ObservableObject {
   
   func deleteConfirmationButtonTapped() {
     self.onDelete()
+    self.route = nil
   }
   
   //  func editButtonTapped() {

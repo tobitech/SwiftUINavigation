@@ -183,6 +183,24 @@ extension NavigationLink {
   }
 }
 
+extension NavigationLink {
+  init<Enum, Case, WrappedDestination>(
+    unwrap optionalValue: Binding<Enum?>,
+    case casePath: CasePath<Enum, Case>,
+    // we are using this to tap into the point where a row is tapped on the app.
+    onNavigate: @escaping (Bool) -> Void,
+    @ViewBuilder destination: @escaping (Binding<Case>) -> WrappedDestination,
+    @ViewBuilder label: @escaping () -> Label
+  ) where Destination == WrappedDestination? {
+    self.init(
+      unwrap: optionalValue.case(casePath),
+      onNavigate: onNavigate,
+      destination: destination,
+      label: label
+    )
+  }
+}
+
 extension Binding {
   func didSet(_ callback: @escaping (Value) -> Void) -> Self {
     Binding(

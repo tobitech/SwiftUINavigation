@@ -84,7 +84,8 @@ struct ItemRowView: View {
   
   var body: some View {
     NavigationLink(
-      unwrap: self.$viewModel.route.case(/ItemRowViewModel.Route.edit),
+      unwrap: self.$viewModel.route,
+      case: /ItemRowViewModel.Route.edit,
       onNavigate: self.viewModel.setEditNavigation(isActive:),
       destination: { $item in
         ItemView(item: $item)

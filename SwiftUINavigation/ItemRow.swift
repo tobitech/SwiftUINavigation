@@ -176,7 +176,10 @@ struct ItemRowView: View {
       //          }
       //      }
       //    }
-      .popover(unwrap: self.$viewModel.route.case(/ItemRowViewModel.Route.duplicate)) { $item in
+      .popover(
+        unwrap: self.$viewModel.route,
+        case: /ItemRowViewModel.Route.duplicate
+      ) { $item in
         NavigationView {
           ItemView(item: $item)
             .navigationTitle("Duplicate")

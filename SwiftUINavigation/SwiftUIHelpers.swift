@@ -60,6 +60,36 @@ extension Binding {
 }
 
 extension View {
+  func alert<A: View, M: View, Enum, Case>(
+    title: (Case) -> Text,
+    unwrap data: Binding<Enum?>,
+    case casePath: CasePath<Enum, Case>,
+    @ViewBuilder actions: @escaping (Case) -> A,
+    @ViewBuilder message: @escaping (Case) -> M
+  ) -> some View {
+    self.alert(
+      title: title,
+      presenting: data.case(casePath),
+      actions: actions,
+      message: message
+    )
+  }
+  
+  func confirmationDialog<A: View, M: View, Enum, Case>(
+    title: (Case) -> Text,
+    unwrap data: Binding<Enum?>,
+    case casePath: CasePath<Enum, Case>,
+    @ViewBuilder actions: @escaping (Case) -> A,
+    @ViewBuilder message: @escaping (Case) -> M
+  ) -> some View {
+    self.confirmationDialog(
+      title: title,
+      presenting: data.case(casePath),
+      actions: actions,
+      message: message
+    )
+  }
+  
   func alert<A: View, M: View, T>(
     title: (T) -> Text,
     presenting data: Binding<T?>,
@@ -135,6 +165,14 @@ extension Binding {
 }
 
 extension View {
+  func sheet<Enum, Case, Content>(
+    unwrap optionalValue: Binding<Enum?>,
+    case casePath: CasePath<Enum, Case>,
+    @ViewBuilder content: @escaping (Binding<Case>) -> Content
+  ) -> some View where Case: Identifiable, Content: View {
+    self.sheet(unwrap: optionalValue.case(casePath), content: content)
+  }
+  
   func sheet<Value, Content>(
     unwrap optionalValue: Binding<Value?>,
     @ViewBuilder content: @escaping (Binding<Value>) -> Content
@@ -146,6 +184,14 @@ extension View {
         content(value)
       }
     }
+  }
+  
+  func popover<Enum, Case, Content>(
+    unwrap optionalValue: Binding<Enum?>,
+    case casePath: CasePath<Enum, Case>,
+    @ViewBuilder content: @escaping (Binding<Case>) -> Content
+  ) -> some View where Case: Identifiable, Content: View {
+    self.popover(unwrap: optionalValue.case(casePath), content: content)
   }
   
   func popover<Value, Content>(
@@ -213,10 +259,29 @@ extension Binding {
   }
 }
 
+
+// MARK: - Grand Unified Theory of Navigation Patterns in SwiftUI
+// no matter how different these forms of navigations seem, at their core they are basically doing the same thing.
+// now we see that navigation boils down to a
+// (1) domain modelling problem, where we model mutually exclusive screens as simple enum
+// (2) a domain transformation problem where we cook up the tools to transform bindings of enums and bindings of each of their cases
+// (3) a view API design problem where we can craft initializers of view modifiers that work with our tools to express exactly how our domain controls navigation in the view.
+
 // from binding of collection, to binding of element in collection
 // ForEach.init: (Binding<C>, (Binding<C.Element>) -> some View) -> ForEach
 
 // from binding of optional value, to binding of honest value
 // .sheet        (Binding<V?>, (Binding<V>)        -> some View) -> some View
 
-// NavigationLink.init (Binding<V?>, (Binding<V>)        -> some View) -> NavigationLink
+// the new version we just introduced.
+// .sheet   (Binding<Enum?>, CasePath<Enum, Case>, (Binding<Case>) -> some View) -> some View
+// .popover (Binding<Enum?>, CasePath<Enum, Case>, (Binding<Case>) -> some View) -> some View
+// .alert (Binding<Enum?>, CasePath<Enum, Case>, (Binding<Case>) -> some View) -> some View
+// .dialog (Binding<Enum?>, CasePath<Enum, Case>, (Binding<Case>) -> some View) -> some View
+
+// NavigationLink.init (Binding<V?>, (Binding<V>) -> some View) -> NavigationLink
+// new version
+// NavigationLink.init (Binding<Enum?>, CasePath<Enum, Case>, (Binding<Case>) -> some View) -> NavigationLink
+
+// even the IfCaseLet view: works on binding of honest enum
+// IfCaseLet.init (Binding<Enum>, CasePath<Enum, Case>, (Binding<Case>)        -> some View) -> IfCaseLet

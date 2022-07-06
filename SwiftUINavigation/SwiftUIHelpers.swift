@@ -194,3 +194,11 @@ extension Binding {
     )
   }
 }
+
+// from binding of collection, to binding of element in collection
+// ForEach.init: (Binding<C>, (Binding<C.Element>) -> some View) -> ForEach
+
+// from binding of optional value, to binding of honest value
+// .sheet        (Binding<V?>, (Binding<V>)        -> some View) -> some View
+
+// NavigationLink.init (Binding<V?>, (Binding<V>)        -> some View) -> NavigationLink

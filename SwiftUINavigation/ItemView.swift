@@ -8,6 +8,38 @@
 import CasePaths
 import SwiftUI
 
+struct ColorPickerView: View {
+  @Binding var color: Item.Color?
+  
+  var body: some View {
+    Form {
+      Button(action: { self.color = nil }) {
+        HStack {
+          Text("None")
+          Spacer()
+          if self.color == nil {
+            Image(systemName: "checkmark")
+          }
+        }
+      }
+      
+      Section(header: Text("Default colors")) {
+        ForEach(Item.Color.defaults, id: \.name) { color in
+          Button(action: { self.color = color }) {
+            HStack {
+              Text(color.name)
+              Spacer()
+              if self.color == color {
+                Image(systemName: "checkmark")
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 struct ItemView: View {
   @Binding var item: Item
   @State var nameIsDuplicate = false
@@ -25,16 +57,34 @@ struct ItemView: View {
           }
         }
       
-      Picker("Color", selection: self.$item.color) {
-        Text("None")
-          .tag(Item.Color?.none)
-        
-        ForEach(Item.Color.defaults, id: \.name) { color in
-          Text(color.name)
-          // here we're making sure the type of color passed to the tag matches that of the first item of none above.
-            .tag(Optional(color))
+//      Picker("Color", selection: self.$item.color) {
+//        Text("None")
+//          .tag(Item.Color?.none)
+//
+//        ForEach(Item.Color.defaults, id: \.name) { color in
+//          Text(color.name)
+//          // here we're making sure the type of color passed to the tag matches that of the first item of none above.
+//            .tag(Optional(color))
+//        }
+//      }
+      
+      NavigationLink {
+        ColorPickerView(color: self.$item.color)
+      } label: {
+        HStack {
+          Text("Color")
+          Spacer()
+          if let color = self.item.color {
+            Rectangle()
+              .frame(width: 30, height: 30)
+              .foregroundColor(color.swiftUIColor)
+              .border(Color.black, width: 1)
+          }
+          Text(self.item.color?.name ?? "None")
+            .foregroundColor(.gray)
         }
       }
+
       
       IfCaseLet(self.$item.status, pattern: /Item.Status.inStock) { $quantity in
         Section(header: Text("In stock")) {

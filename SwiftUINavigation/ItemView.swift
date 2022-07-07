@@ -12,6 +12,7 @@ struct ColorPickerView: View {
   // this environment variable figures out what binding is powering th presentation of that view.
   // calling dismiss call write false or nil out that binding in order to transition away.
   @Environment(\.dismiss) var dismiss
+  @State var newColors: [Item.Color] = []
   @Binding var color: Item.Color?
   
   var body: some View {
@@ -44,6 +45,36 @@ struct ColorPickerView: View {
             }
           }
         }
+      }
+      
+      if !self.newColors.isEmpty {
+        Section(header: Text("New colors")) {
+          ForEach(self.newColors, id: \.name) { color in
+            Button(action: {
+              self.color = color
+              self.dismiss()
+            }) {
+              HStack {
+                Text(color.name)
+                Spacer()
+                if self.color == color {
+                  Image(systemName: "checkmark")
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    // we could have use .onAppear but this new modifier was provided .task, which allows us to spin off some asychronous work that is tied to the life cycle of the view.
+    .task {
+      do {
+        try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 500)
+        self.newColors = [ 
+          .init(name: "Pink", red: 1, green: 0.7, blue: 0.7)
+        ]
+      } catch {
+        
       }
     }
   }

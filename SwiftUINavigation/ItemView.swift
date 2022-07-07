@@ -82,11 +82,26 @@ struct ColorPickerView: View {
 
 class ItemViewModel: Identifiable, ObservableObject {
   @Published var item: Item
+  @Published var nameIsDuplicate = false
   
   var id: Item.ID { self.item.id }
   
   init(item: Item) {
     self.item = item
+    
+    // we need to listen for changes in the item name to perform the asynchronous operation in this view model.
+    // this is how we would do it pre-iOS 15
+    // self.$item.sink(receiveValue: <#T##((Item) -> Void)##((Item) -> Void)##(Item) -> Void#>)
+    // new iOS 15 API to turn any publisher to an async sequence
+    // this for loop will be executed everytime `item` publisher emits
+    // but we have to do await inside a funtion that supported concurrency, that's why we're wrapping it in a Task {}.
+    // whether we need to do some memory management here we're not sure. we will expolore it some other time.
+    Task { @MainActor in
+      for await item in self.$item.values {
+        try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 300)
+        self.nameIsDuplicate = item.name == "Keyboard"
+      }
+    }
   }
 }
 
@@ -94,20 +109,20 @@ class ItemViewModel: Identifiable, ObservableObject {
 struct ItemView: View {
 //  @Binding var item: Item
   @ObservedObject var viewModel: ItemViewModel
-  @State var nameIsDuplicate = false
+  // @State var nameIsDuplicate = false
   
   var body: some View {
     Form {
       TextField("Name", text: self.$viewModel.item.name)
-        .background(self.nameIsDuplicate ? Color.red.opacity(0.1) : nil)
-        .onChange(of: self.viewModel.item.name) { newName in
-          print(newName)
-          // TODO: some async validation logic
-          Task { @MainActor in
-            try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 300)
-            self.nameIsDuplicate = newName == "Keyboard"
-          }
-        }
+        .background(self.viewModel.nameIsDuplicate ? Color.red.opacity(0.1) : nil)
+//        .onChange(of: self.viewModel.item.name) { newName in
+//          print(newName)
+//          // TODO: some async validation logic
+//          Task { @MainActor in
+//            try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 300)
+//            self.nameIsDuplicate = newName == "Keyboard"
+//          }
+//        }
       
 //      Picker("Color", selection: self.$item.color) {
 //        Text("None")

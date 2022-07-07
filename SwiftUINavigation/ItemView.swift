@@ -9,11 +9,17 @@ import CasePaths
 import SwiftUI
 
 struct ColorPickerView: View {
+  // this environment variable figures out what binding is powering th presentation of that view.
+  // calling dismiss call write false or nil out that binding in order to transition away.
+  @Environment(\.dismiss) var dismiss
   @Binding var color: Item.Color?
   
   var body: some View {
     Form {
-      Button(action: { self.color = nil }) {
+      Button(action: {
+        self.color = nil
+        self.dismiss()
+      }) {
         HStack {
           Text("None")
           Spacer()
@@ -25,7 +31,10 @@ struct ColorPickerView: View {
       
       Section(header: Text("Default colors")) {
         ForEach(Item.Color.defaults, id: \.name) { color in
-          Button(action: { self.color = color }) {
+          Button(action: {
+            self.color = color
+            self.dismiss()
+          }) {
             HStack {
               Text(color.name)
               Spacer()

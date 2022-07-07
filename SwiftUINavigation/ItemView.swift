@@ -10,10 +10,20 @@ import SwiftUI
 
 struct ItemView: View {
   @Binding var item: Item
+  @State var nameIsDuplicate = false
   
   var body: some View {
     Form {
       TextField("Name", text: self.$item.name)
+        .background(self.nameIsDuplicate ? Color.red.opacity(0.1) : nil)
+        .onChange(of: self.item.name) { newName in
+          print(newName)
+          // TODO: some async validation logic
+          Task { @MainActor in
+            try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 300)
+            self.nameIsDuplicate = newName == "Keyboard"
+          }
+        }
       
       Picker("Color", selection: self.$item.color) {
         Text("None")

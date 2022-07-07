@@ -51,8 +51,20 @@ class InventoryViewModel: ObservableObject {
   @Published var route: Route?
   
   enum Route: Equatable {
-    case add(Item)
+    case add(ItemViewModel)
     case row(id: ItemRowViewModel.ID, route: ItemRowViewModel.Route)
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+      switch (lhs, rhs) {
+      case let (.add(lhs), .add(rhs)):
+        // trippled equal sign means compare as reference types
+        return lhs === rhs
+      case let (.row(lhsId, lhsRoute), .row(rhsId, rhsRoute)):
+        return lhsId == rhsId && lhsRoute == rhsRoute
+      case (.row, .add), (.add, .row):
+        return false
+      }
+    }
   }
   
   init(
@@ -126,10 +138,13 @@ class InventoryViewModel: ObservableObject {
   }
   
   func addButtonTapped() {
-    self.route = .add(.init(
-        name: "",
-        color: nil,
-        status: .inStock(quantity: 1)
+    self.route = .add(
+      ItemViewModel(
+        item: .init(
+          name: "",
+          color: nil,
+          status: .inStock(quantity: 1)
+        )
       )
     )
     
@@ -140,7 +155,7 @@ class InventoryViewModel: ObservableObject {
       try await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
       // assuming after 500 millisec, the AI told returns a predicted name to be added.
       try (/Route.add).modify(&self.route) {
-        $0.name = "Bluetooth keyboard"
+        $0.item.name = "Bluetooth keyboard"
       }
     }
   }
@@ -167,9 +182,9 @@ struct InventoryView: View {
       }
     }
     .navigationBarTitle("Inventory")
-    .sheet(unwrap: self.$viewModel.route.case(/InventoryViewModel.Route.add)) { $itemToAdd in
+    .sheet(item: self.$viewModel.route.case(/InventoryViewModel.Route.add)) { itemToAdd in
       NavigationView {
-        ItemView(item: $itemToAdd)
+        ItemView(viewModel: itemToAdd)
           .navigationTitle("Add")
           .toolbar {
             ToolbarItem(placement: .cancellationAction) {
@@ -179,7 +194,7 @@ struct InventoryView: View {
             }
             ToolbarItem(placement: .primaryAction) {
               Button("Save") {
-                self.viewModel.add(item: itemToAdd)
+                self.viewModel.add(item: itemToAdd.item)
               }
             }
           }

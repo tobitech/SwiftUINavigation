@@ -18,8 +18,21 @@ class ItemRowViewModel: Identifiable, ObservableObject {
   
   enum Route: Equatable {
     case deleteAlert
-    case duplicate(Item)
-    case edit(Item)
+    case duplicate(ItemViewModel)
+    case edit(ItemViewModel)
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+      switch (lhs, rhs) {
+        case (.deleteAlert, .deleteAlert):
+          return true
+        case let (.duplicate(lhs), .duplicate(rhs)):
+          return lhs === rhs
+      case let (.edit(lhs), .edit(rhs)):
+        return lhs === rhs
+      case (.deleteAlert, _), (.duplicate, _), (.edit, _):
+        return false
+      }
+    }
   }
   
   var onDelete: () -> Void = {}
@@ -45,7 +58,7 @@ class ItemRowViewModel: Identifiable, ObservableObject {
   //  }
   
   func setEditNavigation(isActive: Bool) {
-    self.route = isActive ? .edit(self.item) : nil
+    self.route = isActive ? .edit(.init(item: self.item)) : nil
   }
   
   func cancelButtonTapped() {
@@ -53,7 +66,7 @@ class ItemRowViewModel: Identifiable, ObservableObject {
   }
   
   func duplicateButtonTapped() {
-    self.route = .duplicate(self.item.duplicate())
+    self.route = .duplicate(.init(item: self.item.duplicate()))
   }
   
   func edit(item: Item) {
@@ -84,12 +97,15 @@ struct ItemRowView: View {
   @ObservedObject var viewModel: ItemRowViewModel
   
   var body: some View {
+    // Since we're not longer using the binding in the destination
+    // We should switch to a NavigationLink initializer that returns a honest value just as we did with the .sheet and .popover.
+    // SwiftUI doesn't provide one, check the episode exercise for how to do it.
     NavigationLink(
       unwrap: self.$viewModel.route,
       case: /ItemRowViewModel.Route.edit,
       onNavigate: self.viewModel.setEditNavigation(isActive:),
-      destination: { $item in
-        ItemView(item: $item)
+      destination: { $itemViewModel in
+        ItemView(viewModel: itemViewModel)
           .navigationBarTitle("Edit")
           .navigationBarBackButtonHidden(true)
           .toolbar {
@@ -101,7 +117,7 @@ struct ItemRowView: View {
 
             ToolbarItem(placement: .primaryAction) {
               Button("Save") {
-                self.viewModel.edit(item: $item.wrappedValue)
+                self.viewModel.edit(item: itemViewModel.item)
               }
             }
           }
@@ -178,11 +194,10 @@ struct ItemRowView: View {
       //      }
       //    }
       .popover(
-        unwrap: self.$viewModel.route,
-        case: /ItemRowViewModel.Route.duplicate
-      ) { $item in
+        item: self.$viewModel.route.case(/ItemRowViewModel.Route.duplicate)
+      ) { itemViewModel in
         NavigationView {
-          ItemView(item: $item)
+          ItemView(viewModel: itemViewModel)
             .navigationTitle("Duplicate")
             .toolbar {
               ToolbarItem(placement: .cancellationAction) {
@@ -197,7 +212,7 @@ struct ItemRowView: View {
                     ProgressView()
                   }
                   Button("Save") {
-                    self.viewModel.duplicate(item: item)
+                    self.viewModel.duplicate(item: itemViewModel.item)
                   }
                 }
                 .disabled(self.viewModel.isSaving)

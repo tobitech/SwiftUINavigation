@@ -14,6 +14,12 @@
 		206B069B28710E4C00569E59 /* SwiftUINavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B069A28710E4C00569E59 /* SwiftUINavigationTests.swift */; };
 		206B06A528710E4C00569E59 /* SwiftUINavigationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B06A428710E4C00569E59 /* SwiftUINavigationUITests.swift */; };
 		206B06A728710E4C00569E59 /* SwiftUINavigationUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B06A628710E4C00569E59 /* SwiftUINavigationUITestsLaunchTests.swift */; };
+		20FF37992871B79A0072A803 /* Inventory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FF37982871B79A0072A803 /* Inventory.swift */; };
+		20FF379C2871C6590072A803 /* IdentifiedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 20FF379B2871C6590072A803 /* IdentifiedCollections */; };
+		20FF379E2871D1F00072A803 /* SwiftUIHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FF379D2871D1F00072A803 /* SwiftUIHelpers.swift */; };
+		20FF37A02871EAD70072A803 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FF379F2871EAD70072A803 /* ItemView.swift */; };
+		20FF37A3287201BE0072A803 /* CasePaths in Frameworks */ = {isa = PBXBuildFile; productRef = 20FF37A2287201BE0072A803 /* CasePaths */; };
+		20FF37A528723E960072A803 /* ItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FF37A428723E960072A803 /* ItemRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		200C4A9C28784EBC0085E4BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		206B068628710E4800569E59 /* SwiftUINavigation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUINavigation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		206B068928710E4800569E59 /* SwiftUINavigationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUINavigationApp.swift; sourceTree = "<group>"; };
 		206B068B28710E4800569E59 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -44,6 +51,10 @@
 		206B06A028710E4C00569E59 /* SwiftUINavigationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUINavigationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		206B06A428710E4C00569E59 /* SwiftUINavigationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUINavigationUITests.swift; sourceTree = "<group>"; };
 		206B06A628710E4C00569E59 /* SwiftUINavigationUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUINavigationUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		20FF37982871B79A0072A803 /* Inventory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inventory.swift; sourceTree = "<group>"; };
+		20FF379D2871D1F00072A803 /* SwiftUIHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIHelpers.swift; sourceTree = "<group>"; };
+		20FF379F2871EAD70072A803 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
+		20FF37A428723E960072A803 /* ItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +62,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20FF379C2871C6590072A803 /* IdentifiedCollections in Frameworks */,
+				20FF37A3287201BE0072A803 /* CasePaths in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,8 +107,13 @@
 		206B068828710E4800569E59 /* SwiftUINavigation */ = {
 			isa = PBXGroup;
 			children = (
+				200C4A9C28784EBC0085E4BD /* Info.plist */,
 				206B068928710E4800569E59 /* SwiftUINavigationApp.swift */,
 				206B068B28710E4800569E59 /* ContentView.swift */,
+				20FF37982871B79A0072A803 /* Inventory.swift */,
+				20FF37A428723E960072A803 /* ItemRow.swift */,
+				20FF379F2871EAD70072A803 /* ItemView.swift */,
+				20FF379D2871D1F00072A803 /* SwiftUIHelpers.swift */,
 				206B068D28710E4B00569E59 /* Assets.xcassets */,
 				206B068F28710E4B00569E59 /* Preview Content */,
 			);
@@ -143,6 +161,10 @@
 			dependencies = (
 			);
 			name = SwiftUINavigation;
+			packageProductDependencies = (
+				20FF379B2871C6590072A803 /* IdentifiedCollections */,
+				20FF37A2287201BE0072A803 /* CasePaths */,
+			);
 			productName = SwiftUINavigation;
 			productReference = 206B068628710E4800569E59 /* SwiftUINavigation.app */;
 			productType = "com.apple.product-type.application";
@@ -215,6 +237,10 @@
 				Base,
 			);
 			mainGroup = 206B067D28710E4800569E59;
+			packageReferences = (
+				20FF379A2871C6590072A803 /* XCRemoteSwiftPackageReference "swift-identified-collections" */,
+				20FF37A1287201BE0072A803 /* XCRemoteSwiftPackageReference "swift-case-paths" */,
+			);
 			productRefGroup = 206B068728710E4800569E59 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -257,7 +283,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20FF37992871B79A0072A803 /* Inventory.swift in Sources */,
+				20FF379E2871D1F00072A803 /* SwiftUIHelpers.swift in Sources */,
 				206B068C28710E4800569E59 /* ContentView.swift in Sources */,
+				20FF37A528723E960072A803 /* ItemRow.swift in Sources */,
+				20FF37A02871EAD70072A803 /* ItemView.swift in Sources */,
 				206B068A28710E4800569E59 /* SwiftUINavigationApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -420,6 +450,7 @@
 				DEVELOPMENT_TEAM = J8A5ZAM5GV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SwiftUINavigation/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -449,6 +480,7 @@
 				DEVELOPMENT_TEAM = J8A5ZAM5GV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SwiftUINavigation/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -583,6 +615,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		20FF379A2871C6590072A803 /* XCRemoteSwiftPackageReference "swift-identified-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-identified-collections";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.0;
+			};
+		};
+		20FF37A1287201BE0072A803 /* XCRemoteSwiftPackageReference "swift-case-paths" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-case-paths";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		20FF379B2871C6590072A803 /* IdentifiedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 20FF379A2871C6590072A803 /* XCRemoteSwiftPackageReference "swift-identified-collections" */;
+			productName = IdentifiedCollections;
+		};
+		20FF37A2287201BE0072A803 /* CasePaths */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 20FF37A1287201BE0072A803 /* XCRemoteSwiftPackageReference "swift-case-paths" */;
+			productName = CasePaths;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 206B067E28710E4800569E59 /* Project object */;
 }
